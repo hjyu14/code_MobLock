@@ -1,4 +1,4 @@
-# MobileIsolator
+# MobLock
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -8,11 +8,11 @@ model weights accompanying the paper
 contents reproduce every figure and table reported in the main 
 text and the Supplementary Information.
 
-The paper introduces **MobileIsolator**, a Proximal-Policy-
+The paper introduces **MobLock**, a Proximal-Policy-
 Optimization agent backed by a dual-stream Graph Attention 
 Network, that learns long-horizon node-removal policies to 
 isolate a set of *mobile* target nodes from the largest connected 
-component of a network. MobileIsolator is trained once on small 
+component of a network. MobLock is trained once on small 
 synthetic graphs (Barabási–Albert and Watts–Strogatz, 
 $50 \le N \le 100$) and is then evaluated zero-shot on much 
 larger synthetic networks, on six real-world isolation scenarios 
@@ -23,9 +23,9 @@ as a Monte-Carlo-Tree-Search reference.
 
 ## Algorithm overview
 
-![MobileIsolator algorithm overview](fig2/fig2.png)
+![MobLock algorithm overview](fig2/fig2.png)
 
-MobileIsolator alternates between two phases at every decision 
+MobLock alternates between two phases at every decision 
 step: (i) a structural stream applies multi-layer Graph Attention 
 to encode each node's local topological role together with its 
 proximity to the current target positions, and (ii) a global 
@@ -43,11 +43,11 @@ authoritatively defined in [`train/`](train/README_train.md).
 ## Repository structure
 
 ```
-code_mobileisolator/
+code_MobLock/
 ├── LICENSE
 ├── README.md                         (this file)
 │
-├── train/                            MobileIsolator training code + released model weights
+├── train/                            MobLock training code + released model weights
 │   └── README_train.md
 │
 ├── fig1/                             Main-text Figure 1 (heuristic-failure motivation)
@@ -82,7 +82,7 @@ into those READMEs.
 The repository ships with every pre-computed CSV needed to 
 re-render every figure in the paper. To verify your setup is 
 working, render the main-text Figure 3 — the synthetic benchmark 
-that compares MobileIsolator against the three adaptive 
+that compares MobLock against the three adaptive 
 heuristics across four topology–target regimes:
 
 ```bash
@@ -117,10 +117,10 @@ figure's own README for full details.
 | Figure | What it shows | Directory |
 |--------|---------------|-----------|
 | Figure 1 | Motivation: heuristic baselines fail on mobile targets | [`fig1/`](fig1/README_fig1.md) |
-| Figure 2 | Schematic of the MobileIsolator architecture | `fig2/` (PDF only) |
+| Figure 2 | Schematic of the MobLock architecture | `fig2/` (PDF only) |
 | Figure 3 | Four-method benchmark on synthetic BA / WS networks under random / localized target placement | [`fig3/`](fig3/README_fig3.md) |
 | Figure 4 | Generalization to larger node scales and robustness under biased target movement | [`fig4/`](fig4/README_fig4.md) |
-| Figure 5 | Time-resolved metrics tracking the geometry of MobileIsolator's removals | [`fig5/`](fig5/README_fig5.md) |
+| Figure 5 | Time-resolved metrics tracking the geometry of MobLock's removals | [`fig5/`](fig5/README_fig5.md) |
 | Figure 6 | Six real-world isolation scenarios (COVID-19, invasive species, urban flood, smuggling, socialbot, fugitive chase) | [`fig6/`](fig6/README_fig6.md) |
 
 ### Supplementary Information
@@ -129,7 +129,7 @@ figure's own README for full details.
 |----------------|---------------|-----------|
 | SM Figs 2–4 | Per-regime breakdowns of Figure 3 | rendered alongside [`fig3/`](fig3/README_fig3.md) |
 | SM Fig 1 | Validity of the evasion-factor $\lambda$ as a collapsed parameter | [`fig_sm/sm_fig1/`](fig_sm/sm_fig1/README_sm_fig1.md) |
-| SM Fig 5 | MobileIsolator vs. Monte Carlo Tree Search | [`fig_sm/sm_fig5/`](fig_sm/sm_fig5/README_sm_fig5.md) |
+| SM Fig 5 | MobLock vs. Monte Carlo Tree Search | [`fig_sm/sm_fig5/`](fig_sm/sm_fig5/README_sm_fig5.md) |
 | SM Fig 6 | Generalization beyond the training target-ratio range | [`fig_sm/sm_fig6/`](fig_sm/sm_fig6/README_sm_fig6.md) |
 | SM Fig 7 | Variant of Fig 5 under localized targets | rendered alongside [`fig5/`](fig5/README_fig5.md) |
 | SM Fig 8 | Full $P_C$ and ANC curves for the six real-world scenarios | [`fig_sm/sm_fig8/`](fig_sm/sm_fig8/README_sm_fig8.md) |
@@ -145,7 +145,7 @@ self-contained copies. The dependencies are summarised below.
 
 ```
                             train/
-                       (trained MobileIsolator weights;
+                       (trained MobLock weights;
                         loaded by every script that
                         evaluates the agent)
                               ↑
@@ -174,7 +174,7 @@ self-contained copies. The dependencies are summarised below.
 Concretely:
 
 - **`train/` is loaded by every comparison script** that 
-  evaluates MobileIsolator. The released weights live at 
+  evaluates MobLock. The released weights live at 
   `train/gnn_ppo_dual_stream_n50-100__seed42__1769653775/model.pt`.
 - **`fig3/comparison_method.py` is a shared utility module** 
   (heuristic implementations, simulators, graph generators, 
@@ -188,7 +188,7 @@ Concretely:
   shipping their own copy.
 - **`fig_sm/sm_table1_3/` ships its own three ablation model 
   weights** (No-Global / No-Attn / No-VNode), because they are 
-  used only by that experiment. The full MobileIsolator weights 
+  used only by that experiment. The full MobLock weights 
   it also needs are loaded from `train/`.
 
 All paths are resolved at run-time relative to each script's own 
@@ -210,7 +210,7 @@ capped at $60$ in every script (due to the 63-handle limit of the
 worker counts are used.
 
 GPU acceleration is recommended but not required: training 
-MobileIsolator from scratch (see [`train/`](train/README_train.md)) 
+MobLock from scratch (see [`train/`](train/README_train.md)) 
 strongly benefits from CUDA; rendering figures from the shipped 
 CSVs runs comfortably on CPU.
 
@@ -225,15 +225,15 @@ The code targets Python 3.10+. The full dependency list is in
 - `matplotlib`, `seaborn`
 - `gymnasium` (for the training environment)
 - `torch`, `torch-geometric` (for evaluating or retraining 
-  MobileIsolator)
+  MobLock)
 - `tensorboard` (only for inspecting training curves; not needed 
   for inference)
 
 For Conda users:
 
 ```bash
-conda create -n mobileisolator python=3.10
-conda activate mobileisolator
+conda create -n MobLock python=3.10
+conda activate MobLock
 conda install -c pytorch -c nvidia pytorch pytorch-cuda=12.1
 pip install torch-geometric
 pip install -r requirements.txt
